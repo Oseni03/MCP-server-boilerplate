@@ -8,7 +8,7 @@ import fastGlob from "fast-glob";
  * @returns The module name without extension
  */
 export function getModuleName(filePath: string): string {
-  return path.basename(filePath, ".js");
+	return path.basename(filePath, ".js");
 }
 
 /**
@@ -17,7 +17,7 @@ export function getModuleName(filePath: string): string {
  * @returns The module type (e.g., "tools", "resources", "prompts")
  */
 export function getModuleType(filePath: string): string {
-  return path.basename(path.dirname(filePath));
+	return path.basename(path.dirname(filePath));
 }
 
 /**
@@ -26,7 +26,7 @@ export function getModuleType(filePath: string): string {
  * @returns A file:// URL string
  */
 export function filePathToUrl(filePath: string): string {
-  return pathToFileURL(filePath).href;
+	return pathToFileURL(filePath).href;
 }
 
 /**
@@ -35,11 +35,11 @@ export function filePathToUrl(filePath: string): string {
  * @returns Array of glob patterns for module discovery
  */
 export function getModulePatterns(rootDir: string): Array<string> {
-  return [
-    path.join(rootDir, "tools", "*.js"),
-    path.join(rootDir, "resources", "*.js"),
-    path.join(rootDir, "prompts", "*.js"),
-  ];
+	return [
+		path.join(rootDir, "tools", "*.js"),
+		path.join(rootDir, "resources", "*.js"),
+		path.join(rootDir, "prompts", "*.js"),
+	];
 }
 
 /**
@@ -48,7 +48,7 @@ export function getModulePatterns(rootDir: string): Array<string> {
  * @returns The root directory path
  */
 export function getRootDir(importMetaUrl: string): string {
-  return path.dirname(path.dirname(new URL(importMetaUrl).pathname));
+	return path.dirname(path.dirname(new URL(importMetaUrl).pathname));
 }
 
 /**
@@ -56,9 +56,11 @@ export function getRootDir(importMetaUrl: string): string {
  * @param result - The Promise settled result to check
  * @returns True if the module loaded successfully
  */
-export function isSuccessfulResult(result: PromiseSettledResult<{ success: boolean }>): boolean {
-  if (result.status === "rejected") return false;
-  return result.value.success;
+export function isSuccessfulResult(
+	result: PromiseSettledResult<{ success: boolean }>
+): boolean {
+	if (result.status === "rejected") return false;
+	return result.value.success;
 }
 
 /**
@@ -66,9 +68,11 @@ export function isSuccessfulResult(result: PromiseSettledResult<{ success: boole
  * @param result - The Promise settled result to check
  * @returns True if the module failed to load
  */
-export function isFailedResult(result: PromiseSettledResult<{ success: boolean }>): boolean {
-  if (result.status === "rejected") return true;
-  return !result.value.success;
+export function isFailedResult(
+	result: PromiseSettledResult<{ success: boolean }>
+): boolean {
+	if (result.status === "rejected") return true;
+	return !result.value.success;
 }
 
 /**
@@ -77,11 +81,11 @@ export function isFailedResult(result: PromiseSettledResult<{ success: boolean }
  * @returns Object with successful and failed counts
  */
 export function countResults(
-  results: Array<PromiseSettledResult<{ success: boolean }>>
+	results: Array<PromiseSettledResult<{ success: boolean }>>
 ): { successful: number; failed: number } {
-  const successful = results.filter(isSuccessfulResult).length;
-  const failed = results.filter(isFailedResult).length;
-  return { successful, failed };
+	const successful = results.filter(isSuccessfulResult).length;
+	const failed = results.filter(isFailedResult).length;
+	return { successful, failed };
 }
 
 /**
@@ -90,8 +94,13 @@ export function countResults(
  * @param failed - Number of failed registrations
  * @returns Formatted summary string
  */
-export function formatRegistrationSummary(successful: number, failed: number): string {
-  return `\nRegistration complete: ${String(successful)} successful, ${String(failed)} failed`;
+export function formatRegistrationSummary(
+	successful: number,
+	failed: number
+): string {
+	return `\nRegistration complete: ${String(successful)} successful, ${String(
+		failed
+	)} failed`;
 }
 
 /**
@@ -100,18 +109,21 @@ export function formatRegistrationSummary(successful: number, failed: number): s
  * @param moduleName - The name of the module
  * @returns Formatted string like "tools/echo"
  */
-export function formatModuleInfo(moduleType: string, moduleName: string): string {
-  return `${moduleType}/${moduleName}`;
+export function formatModuleInfo(
+	moduleType: string,
+	moduleName: string
+): string {
+	return `${moduleType}/${moduleName}`;
 }
 
 /**
  * Type definition for module load results
  */
 export type ModuleLoadResult = {
-  success: boolean;
-  name: string;
-  type?: string;
-  error?: unknown;
+	success: boolean;
+	name: string;
+	type?: string;
+	error?: unknown;
 };
 
 /**
@@ -119,9 +131,11 @@ export type ModuleLoadResult = {
  * @param filePath - The path to the module file
  * @returns Promise resolving to the imported module
  */
-export async function loadModule(filePath: string): Promise<{ default?: unknown }> {
-  const fileUrl = filePathToUrl(filePath);
-  return await import(fileUrl) as { default?: unknown };
+export async function loadModule(
+	filePath: string
+): Promise<{ default?: unknown }> {
+	const fileUrl = filePathToUrl(filePath);
+	return (await import(fileUrl)) as { default?: unknown };
 }
 
 /**
@@ -130,7 +144,7 @@ export async function loadModule(filePath: string): Promise<{ default?: unknown 
  * @param moduleName - The name of the module being loaded
  */
 export function logModuleLoading(moduleType: string, moduleName: string): void {
-  console.error(`Loading ${formatModuleInfo(moduleType, moduleName)}...`);
+	console.error(`Loading ${formatModuleInfo(moduleType, moduleName)}...`);
 }
 
 /**
@@ -139,7 +153,7 @@ export function logModuleLoading(moduleType: string, moduleName: string): void {
  * @param name - The name of the module that was registered
  */
 export function logModuleSuccess(type: string, name: string): void {
-  console.error(`✓ Registered ${type}: ${name}`);
+	console.error(`✓ Registered ${type}: ${name}`);
 }
 
 /**
@@ -148,7 +162,7 @@ export function logModuleSuccess(type: string, name: string): void {
  * @param error - The error message to display
  */
 export function logModuleError(moduleName: string, error: string): void {
-  console.error(`✗ Module ${moduleName} ${error}`);
+	console.error(`✗ Module ${moduleName} ${error}`);
 }
 
 /**
@@ -157,7 +171,7 @@ export function logModuleError(moduleName: string, error: string): void {
  * @param error - The error object or message
  */
 export function logLoadError(moduleName: string, error: unknown): void {
-  console.error(`✗ Failed to load ${moduleName}:`, error);
+	console.error(`✗ Failed to load ${moduleName}:`, error);
 }
 
 /**
@@ -165,7 +179,7 @@ export function logLoadError(moduleName: string, error: unknown): void {
  * @param count - The number of files found
  */
 export function logFoundFiles(count: number): void {
-  console.error(`Found ${String(count)} module files to register`);
+	console.error(`Found ${String(count)} module files to register`);
 }
 
 /**
@@ -173,25 +187,29 @@ export function logFoundFiles(count: number): void {
  * @param patterns - Array of glob patterns being searched
  */
 export function logAutoRegistering(patterns: Array<string>): void {
-  console.error("Auto-registering modules from:", patterns);
+	console.error("Auto-registering modules from:", patterns);
 }
 
 /**
  * Logs details about all failed modules
  * @param results - Array of Promise settled results containing module load results
  */
-export function logFailedModules(results: Array<PromiseSettledResult<ModuleLoadResult>>): void {
-  console.error("Failed modules:");
-  results.filter(isFailedResult).forEach((result) => {
-    if (result.status === "rejected") {
-      console.error(`  - Error: ${String(result.reason)}`);
-      return;
-    }
-    
-    if (!result.value.success) {
-      console.error(`  - ${result.value.name}: ${String(result.value.error)}`);
-    }
-  });
+export function logFailedModules(
+	results: Array<PromiseSettledResult<ModuleLoadResult>>
+): void {
+	console.error("Failed modules:");
+	results.filter(isFailedResult).forEach((result) => {
+		if (result.status === "rejected") {
+			console.error(`  - Error: ${String(result.reason)}`);
+			return;
+		}
+
+		if (!result.value.success) {
+			console.error(
+				`  - ${result.value.name}: ${String(result.value.error)}`
+			);
+		}
+	});
 }
 
 /**
@@ -200,16 +218,16 @@ export function logFailedModules(results: Array<PromiseSettledResult<ModuleLoadR
  * @returns Promise resolving to array of absolute file paths
  */
 export async function findModuleFiles(rootDir: string): Promise<Array<string>> {
-  const patterns = getModulePatterns(rootDir);
-  logAutoRegistering(patterns);
-  
-  const files = await fastGlob(patterns, {
-    absolute: true,
-    onlyFiles: true,
-  });
-  
-  logFoundFiles(files.length);
-  return files;
+	const patterns = getModulePatterns(rootDir);
+	logAutoRegistering(patterns);
+
+	const files = await fastGlob(patterns, {
+		absolute: true,
+		onlyFiles: true,
+	});
+
+	logFoundFiles(files.length);
+	return files;
 }
 
 /**
@@ -218,8 +236,11 @@ export async function findModuleFiles(rootDir: string): Promise<Array<string>> {
  * @param type - The type of the successfully loaded module
  * @returns A success result object
  */
-export function createSuccessResult(name: string, type: string): ModuleLoadResult {
-  return { success: true, name, type };
+export function createSuccessResult(
+	name: string,
+	type: string
+): ModuleLoadResult {
+	return { success: true, name, type };
 }
 
 /**
@@ -228,6 +249,9 @@ export function createSuccessResult(name: string, type: string): ModuleLoadResul
  * @param error - The error that occurred
  * @returns A failure result object
  */
-export function createErrorResult(name: string, error: unknown): ModuleLoadResult {
-  return { success: false, name, error };
+export function createErrorResult(
+	name: string,
+	error: unknown
+): ModuleLoadResult {
+	return { success: false, name, error };
 }
